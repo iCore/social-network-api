@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @include('partials/email_style')
+  </head>
+  <body>
+    <div class="mail">
+      <img src="https://thumb.tildacdn.com/tild3939-3635-4064-a335-386461613361/-/resize/960x/-/format/webp/social-network-app.png" alt="Facebook" class="logo" />
+
+      <p>Welcome to Social Network!</p>
+
+      <p>Your registration is almost ready, click the button below to activate your account.</p>
+
+      <a href="{{ activation_link }}" target="_blank" class="button"> Activate my account </a>
+    </div>
+  </body>
+</html>

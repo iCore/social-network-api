@@ -1,10 +1,18 @@
 import { UserRole } from 'App/Utils/user'
-import { UserKeys } from 'App/Models'
+import { UserKeys, Profile } from 'App/Models'
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  hasMany,
+  HasMany,
+  hasOne,
+  HasOne
+} from '@ioc:Adonis/Lucid/Orm'
 
-export default class Users extends BaseModel {
+export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
@@ -36,7 +44,7 @@ export default class Users extends BaseModel {
   public disabledAt: DateTime
 
   @beforeSave()
-  public static async hashPassword(users: Users) {
+  public static async hashPassword(users: User) {
     if (users.$dirty.password) {
       users.password = await Hash.make(users.password)
     }
@@ -44,4 +52,7 @@ export default class Users extends BaseModel {
 
   @hasMany(() => UserKeys)
   public keys: HasMany<typeof UserKeys>
+
+  @hasOne(() => Profile)
+  public profile: HasOne<typeof Profile>
 }

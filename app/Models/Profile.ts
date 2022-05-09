@@ -1,9 +1,9 @@
-import { UserKeysType } from 'App/Utils/user'
 import { User } from 'App/Models'
+import { UserInterest } from 'App/Utils/user'
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class UserKey extends BaseModel {
+export default class Profile extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
@@ -11,16 +11,16 @@ export default class UserKey extends BaseModel {
   public userId: number
 
   @column()
-  public key: string
+  public biography: string
 
   @column()
-  public type: UserKeysType
+  public fullName: string
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  @column()
+  public interest: UserInterest
 
   @column.dateTime()
-  public expiredAt: DateTime
+  public birthday: DateTime
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
