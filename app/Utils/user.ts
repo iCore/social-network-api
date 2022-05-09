@@ -6,7 +6,7 @@ export const userKeys = ['registration', 'password_recovery'] as const
 
 export type UserKeysType = typeof userKeys[number]
 
-export const userInterests = ['man', 'women'] as const
+export const userInterests = ['man', 'women', 'anything'] as const
 
 export type UserInterest = typeof userInterests[number]
 

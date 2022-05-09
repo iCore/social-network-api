@@ -16,7 +16,7 @@ export default class UserKeys extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 
-      table.uuid('key').notNullable()
+      table.uuid('token').notNullable()
       table.enum('type', userKeys).notNullable()
 
       /**

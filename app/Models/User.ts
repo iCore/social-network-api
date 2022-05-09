@@ -1,5 +1,5 @@
 import { UserRole } from 'App/Utils/user'
-import { UserKeys, Profile } from 'App/Models'
+import { UserKey, Profile } from 'App/Models'
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
@@ -50,8 +50,8 @@ export default class User extends BaseModel {
     }
   }
 
-  @hasMany(() => UserKeys)
-  public keys: HasMany<typeof UserKeys>
+  @hasMany(() => UserKey)
+  public keys: HasMany<typeof UserKey>
 
   @hasOne(() => Profile)
   public profile: HasOne<typeof Profile>

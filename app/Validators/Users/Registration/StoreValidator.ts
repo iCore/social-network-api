@@ -28,20 +28,9 @@ export default class StoreValidator {
     email: schema.string([
       rules.trim(),
       rules.email(),
-      rules.normalizeEmail({
-        allLowercase: true,
-        gmailRemoveSubaddress: true
-      })
+      rules.unique({ column: 'email', table: 'users' })
     ]),
-    redirectLink: schema.string([
-      rules.trim(),
-      rules.url(),
-      rules.normalizeUrl({
-        normalizeProtocol: true,
-        stripWWW: true,
-        forceHttps: true
-      })
-    ])
+    redirectLink: schema.string([rules.trim(), rules.url()])
   })
 
   /**

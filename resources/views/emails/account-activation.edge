@@ -1,0 +1,43 @@
+<mjml>
+  <mj-head>
+    <mj-title>Social Network</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Roboto, Helvetica, sans-serif"></mj-all>
+      <mj-text font-weight="300" font-size="16px" color="#616161" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-image src="https://cdn.recast.ai/newsletter/city-01.png"></mj-image>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="center" font-weight="500" padding="0px" font-size="18px">Welcome to Social Network</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding-top="30px">
+      <mj-column width="100%">
+        <mj-text>
+          <p>Hello {{ fullName }}!</p>
+          <p> Your registration is almost ready, click the button below to activate your account.</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-divider border-width="1px" border-style="solid" border-color="grey" />
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="{{ activationLink }}">
+          Activate my account
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,4 +1,4 @@
-import { userInterests } from 'App/Utils/user'
+import { userInterests, UserInterest } from 'App/Utils/user'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class Profiles extends BaseSchema {
@@ -20,7 +20,7 @@ export default class Profiles extends BaseSchema {
       table.string('full_name').notNullable()
 
       table.timestamp('birthday', { useTz: true }).nullable()
-      table.enum('interest', userInterests).nullable()
+      table.enum('interest', userInterests).defaultTo('anything' as UserInterest)
     })
   }
 

@@ -11,7 +11,7 @@ export default class UserKey extends BaseModel {
   public userId: number
 
   @column()
-  public key: string
+  public token: string
 
   @column()
   public type: UserKeysType
