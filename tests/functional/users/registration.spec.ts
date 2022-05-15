@@ -16,54 +16,94 @@ test.group('Users registration', (group) => {
 
   // RegistrationsController.store
 
-  test('Should fail if full name is not assigned', async ({ client }) => {
+  test('Should fail if full name is not assigned', async ({ client, assert }) => {
     const email = faker.internet.email()
     const redirectLink = faker.internet.url()
 
     const response = await client.post(URL).form({ email, redirectLink })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'required', field: 'fullName' }])
   })
 
-  test('Should fail if email is not assigned', async ({ client }) => {
+  test('Should fail if email is not assigned', async ({ client, assert }) => {
     const fullName = faker.name.findName()
     const redirectLink = faker.internet.url()
 
     const response = await client.post(URL).form({ fullName, redirectLink })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'required', field: 'email' }])
   })
 
-  test('Should fail if redirect link is not assigned', async ({ client }) => {
+  test('Should fail if redirect link is not assigned', async ({ client, assert }) => {
     const email = faker.internet.email()
     const fullName = faker.name.findName()
 
     const response = await client.post(URL).form({ email, fullName })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'required', field: 'redirectLink' }])
   })
 
-  test('Should fail if email is not valid', async ({ client }) => {
+  test('Should fail if email is not valid', async ({ client, assert }) => {
     const email = 'faker.internet.email()'
     const fullName = faker.name.findName()
     const redirectLink = faker.internet.url()
 
     const response = await client.post(URL).form({ email, fullName, redirectLink })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'email', field: 'email' }])
   })
 
-  test('Should fail if redirect link is not valid', async ({ client }) => {
+  test('Should fail if redirect link is not valid', async ({ client, assert }) => {
     const email = faker.internet.email()
     const fullName = faker.name.findName()
     const redirectLink = 'faker.internet.url()'
 
     const response = await client.post(URL).form({ email, fullName, redirectLink })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'url', field: 'redirectLink' }])
   })
 
-  test('Should fail if the email is already registered', async ({ client }) => {
+  test('Should fail if the email is already registered', async ({ client, assert }) => {
     const user = await UserFactory.create()
 
     const email = user.email
@@ -72,7 +112,15 @@ test.group('Users registration', (group) => {
 
     const response = await client.post(URL).form({ email, fullName, redirectLink })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'unique', field: 'email' }])
   })
 
   test('Should be possible to pre-register the user', async ({ client, assert }) => {
@@ -104,14 +152,14 @@ test.group('Users registration', (group) => {
       query.where('type', 'registration' as UserKeysType)
     })
 
+    assert.lengthOf(account.keys, 1)
+
     await account.load('profile')
 
-    assert.lengthOf(account.keys, 1)
     assert.equal(fullName, account.profile.fullName)
+    assert.equal(account.isActive, false)
 
-    const message = mailer.find((mail) => {
-      return mail.to !== undefined && mail.to[0].address === email
-    })
+    const message = mailer.find((mail) => mail.to !== undefined && mail.to[0].address === email)
 
     assert.include(message?.html, `${redirectLink}/${account.keys[0].token}`)
 
@@ -156,7 +204,7 @@ test.group('Users registration', (group) => {
 
   // RegistrationsController.update
 
-  test('Should fail if username is not assigned', async ({ client }) => {
+  test('Should fail if username is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -166,10 +214,18 @@ test.group('Users registration', (group) => {
       passwordConfirmation: password
     })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'required', field: 'username' }])
   })
 
-  test('Should fail if password is not assigned', async ({ client }) => {
+  test('Should fail if password is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -179,10 +235,18 @@ test.group('Users registration', (group) => {
       passwordConfirmation: password
     })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'required', field: 'password' }])
   })
 
-  test('Should fail if password confirmation is not assigned', async ({ client }) => {
+  test('Should fail if password confirmation is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -192,10 +256,18 @@ test.group('Users registration', (group) => {
       password
     })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
 
-  test('Should fail if username has already been registered', async ({ client }) => {
+  test('Should fail if username has already been registered', async ({ client, assert }) => {
     const user = await UserFactory.create()
 
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
@@ -208,10 +280,21 @@ test.group('Users registration', (group) => {
       passwordConfirmation: password
     })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'unique', field: 'username' }])
   })
 
-  test('Should fail if password confirmation does not match password', async ({ client }) => {
+  test('Should fail if password confirmation does not match password', async ({
+    client,
+    assert
+  }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const response = await client.put(`${URL}/${userKey.token}`).form({
@@ -220,7 +303,15 @@ test.group('Users registration', (group) => {
       passwordConfirmation: faker.internet.password()
     })
 
+    const body = response.body()
+
     response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
 
   test('Should fail if token is invalid [update]', async ({ client }) => {
@@ -268,11 +359,12 @@ test.group('Users registration', (group) => {
 
     const user = await User.findByOrFail('id', userKey.userId)
 
+    assert.equal(user.isActive, true)
+
     await user.load('keys', (query) => {
       query.where('type', 'registration' as UserKeysType)
     })
 
-    assert.equal(user.isActive, true)
     assert.lengthOf(user.keys, 0)
   })
 })
