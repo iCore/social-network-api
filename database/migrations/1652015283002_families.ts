@@ -1,5 +1,5 @@
-import { UserRelationship, userRelationships } from 'App/Utils/user'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { UserRelationship, userRelationships } from 'App/Utils/user'
 
 export default class Families extends BaseSchema {
   protected tableName = 'families'
@@ -25,6 +25,9 @@ export default class Families extends BaseSchema {
         .onDelete('CASCADE')
 
       table.enum('relationship', userRelationships).defaultTo('known' as UserRelationship)
+
+      table.timestamp('since', { useTz: true })
+      table.timestamp('until', { useTz: true }).nullable()
     })
   }
 

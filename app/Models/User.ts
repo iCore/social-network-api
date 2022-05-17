@@ -1,16 +1,16 @@
-import { UserRole } from 'App/Utils/user'
-import { UserKey, Profile } from 'App/Models'
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
-  column,
-  beforeSave,
   BaseModel,
-  hasMany,
+  beforeSave,
+  column,
   HasMany,
-  hasOne,
-  HasOne
+  hasMany,
+  HasOne,
+  hasOne
 } from '@ioc:Adonis/Lucid/Orm'
+import { Profile, UserKey } from 'App/Models'
+import { UserRole } from 'App/Utils/user'
+import { DateTime } from 'luxon'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })

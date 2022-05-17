@@ -1,5 +1,6 @@
-import { fileCategories } from './../../app/Utils/files'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+
+import { fileCategories } from './../../app/Utils/files'
 
 export default class Files extends BaseSchema {
   protected tableName = 'files'

@@ -24,11 +24,10 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    fullName: schema.string([rules.trim()]),
     email: schema.string([
       rules.trim(),
       rules.email(),
-      rules.unique({ column: 'email', table: 'users' })
+      rules.exists({ table: 'users', column: 'email', where: { is_active: true } })
     ]),
     redirectLink: schema.string([rules.trim(), rules.url()])
   })

@@ -1,9 +1,9 @@
-import { UserKeysType } from 'App/Utils'
-import { User } from 'App/Models'
 import { faker } from '@faker-js/faker'
-import { test } from '@japa/runner'
-import Database from '@ioc:Adonis/Lucid/Database'
 import Mail from '@ioc:Adonis/Addons/Mail'
+import Database from '@ioc:Adonis/Lucid/Database'
+import { test } from '@japa/runner'
+import { User } from 'App/Models'
+import { UserKeysType } from 'App/Utils'
 import { UserFactory, UserKeyFactory } from 'Database/factories'
 
 const URL = '/registration'

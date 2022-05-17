@@ -1,5 +1,5 @@
-import { userKeys } from 'App/Utils/user'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { userKeys } from 'App/Utils/user'
 
 export default class UserKeys extends BaseSchema {
   protected tableName = 'user_keys'

@@ -1,7 +1,7 @@
-import { UserKeysType } from 'App/Utils/user'
-import { User } from 'App/Models'
-import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { User } from 'App/Models'
+import { UserKeysType } from 'App/Utils/user'
+import { DateTime } from 'luxon'
 
 export default class UserKey extends BaseModel {
   @column({ isPrimary: true })

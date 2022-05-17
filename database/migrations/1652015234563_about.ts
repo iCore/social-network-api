@@ -1,5 +1,5 @@
-import { usersAbout } from 'App/Utils/user'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { usersAbout } from 'App/Utils/user'
 
 export default class About extends BaseSchema {
   protected tableName = 'about'
@@ -18,6 +18,9 @@ export default class About extends BaseSchema {
 
       table.enum('type', usersAbout).nullable()
       table.text('description').nullable()
+
+      table.timestamp('since', { useTz: true })
+      table.timestamp('until', { useTz: true }).nullable()
     })
   }
 

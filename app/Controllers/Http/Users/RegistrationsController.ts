@@ -1,8 +1,9 @@
-import { User, UserKey } from 'App/Models'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { StoreValidator, UpdateValidator, TokenValidator } from 'App/Validators/Users/Registration'
 import faker from '@faker-js/faker'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AccountActivation from 'App/Mailers/AccountActivation'
+import { User, UserKey } from 'App/Models'
+import { StoreValidator, UpdateValidator } from 'App/Validators/Users/Registration'
+import TokenValidator from 'App/Validators/Users/TokenValidator'
 
 export default class RegistrationsController {
   public async store({ request, response }: HttpContextContract) {
@@ -22,16 +23,16 @@ export default class RegistrationsController {
   }
 
   public async show({ request, response }: HttpContextContract) {
-    const token = await TokenValidator.validate(request)
+    const token = await TokenValidator.validate(request, 'registration')
 
-    const userKeys = await UserKey.findByOrFail('token', token)
+    const userKey = await UserKey.findByOrFail('token', token)
 
-    await userKeys.load('user')
+    await userKey.load('user')
 
-    await userKeys.user.load('profile')
+    await userKey.user.load('profile')
 
     response.ok(
-      userKeys.user.serialize({
+      userKey.user.serialize({
         fields: { pick: ['email'] },
         relations: { profile: { fields: { pick: ['full_name'] } } }
       })
@@ -41,7 +42,7 @@ export default class RegistrationsController {
   public async update({ request, response }: HttpContextContract) {
     const { username, password } = await request.validate(UpdateValidator)
 
-    const token = await TokenValidator.validate(request)
+    const token = await TokenValidator.validate(request, 'registration')
 
     const userKey = await UserKey.findByOrFail('token', token)
 

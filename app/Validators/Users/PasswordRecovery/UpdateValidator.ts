@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
-export default class StoreValidator {
+export default class UpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,13 +24,7 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    fullName: schema.string([rules.trim()]),
-    email: schema.string([
-      rules.trim(),
-      rules.email(),
-      rules.unique({ column: 'email', table: 'users' })
-    ]),
-    redirectLink: schema.string([rules.trim(), rules.url()])
+    password: schema.string([rules.trim(), rules.confirmed('passwordConfirmation')])
   })
 
   /**

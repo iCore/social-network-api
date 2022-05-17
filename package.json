@@ -9,7 +9,7 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "test": "node ace test",
-    "commit": "yarn format && git add . && cz"
+    "commit": "yarn lint --fix && git add . && cz"
   },
   "eslintConfig": {
     "extends": [
@@ -17,12 +17,15 @@
       "prettier"
     ],
     "plugins": [
-      "prettier"
+      "prettier",
+      "simple-import-sort"
     ],
     "rules": {
       "prettier/prettier": [
         "error"
-      ]
+      ],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error"
     }
   },
   "eslintIgnore": [

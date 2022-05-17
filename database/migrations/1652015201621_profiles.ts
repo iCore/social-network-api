@@ -1,5 +1,5 @@
-import { userInterests, UserInterest } from 'App/Utils/user'
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { UserInterest, userInterests } from 'App/Utils/user'
 
 export default class Profiles extends BaseSchema {
   protected tableName = 'profiles'
