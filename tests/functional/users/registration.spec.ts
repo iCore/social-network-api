@@ -16,7 +16,7 @@ test.group('Users registration', (group) => {
 
   // RegistrationsController.store
 
-  test('Should fail if full name is not assigned', async ({ client, assert }) => {
+  test('[store] Should fail if full name is not assigned', async ({ client, assert }) => {
     const email = faker.internet.email()
     const redirectLink = faker.internet.url()
 
@@ -33,7 +33,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'fullName' }])
   })
 
-  test('Should fail if email is not assigned', async ({ client, assert }) => {
+  test('[store] Should fail if email is not assigned', async ({ client, assert }) => {
     const fullName = faker.name.findName()
     const redirectLink = faker.internet.url()
 
@@ -50,7 +50,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'email' }])
   })
 
-  test('Should fail if redirect link is not assigned', async ({ client, assert }) => {
+  test('[store] Should fail if redirect link is not assigned', async ({ client, assert }) => {
     const email = faker.internet.email()
     const fullName = faker.name.findName()
 
@@ -67,7 +67,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'redirectLink' }])
   })
 
-  test('Should fail if email is not valid', async ({ client, assert }) => {
+  test('[store] Should fail if email is not valid', async ({ client, assert }) => {
     const email = 'faker.internet.email()'
     const fullName = faker.name.findName()
     const redirectLink = faker.internet.url()
@@ -85,7 +85,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'email', field: 'email' }])
   })
 
-  test('Should fail if redirect link is not valid', async ({ client, assert }) => {
+  test('[store] Should fail if redirect link is not valid', async ({ client, assert }) => {
     const email = faker.internet.email()
     const fullName = faker.name.findName()
     const redirectLink = 'faker.internet.url()'
@@ -103,7 +103,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'url', field: 'redirectLink' }])
   })
 
-  test('Should fail if the email is already registered', async ({ client, assert }) => {
+  test('[store] Should fail if the email is already registered', async ({ client, assert }) => {
     const user = await UserFactory.create()
 
     const email = user.email
@@ -123,7 +123,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'unique', field: 'email' }])
   })
 
-  test('Should be possible to pre-register the user', async ({ client, assert }) => {
+  test('[store] Should be possible to pre-register the user', async ({ client, assert }) => {
     const email = faker.internet.email()
     const fullName = faker.name.findName()
     const redirectLink = faker.internet.url()
@@ -168,13 +168,13 @@ test.group('Users registration', (group) => {
 
   // RegistrationsController.show
 
-  test('Should fail if token is invalid [show]', async ({ client }) => {
+  test('[show] Should fail if token is invalid', async ({ client }) => {
     const response = await client.get(`${URL}/invalid-token`)
 
     response.assertStatus(422)
   })
 
-  test('Should fail if token does not exist in database [show]', async ({ client }) => {
+  test('[show] Should fail if token does not exist in database', async ({ client }) => {
     const token = faker.datatype.uuid()
 
     const response = await client.get(`${URL}/${token}`)
@@ -182,7 +182,7 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
   })
 
-  test('Should be possible to see the user who is in pre-registration', async ({
+  test('[show] Should be possible to see the user who is in pre-registration', async ({
     client,
     assert
   }) => {
@@ -204,7 +204,7 @@ test.group('Users registration', (group) => {
 
   // RegistrationsController.update
 
-  test('Should fail if username is not assigned', async ({ client, assert }) => {
+  test('[update] Should fail if username is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -225,7 +225,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'username' }])
   })
 
-  test('Should fail if password is not assigned', async ({ client, assert }) => {
+  test('[update] Should fail if password is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -246,7 +246,10 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'password' }])
   })
 
-  test('Should fail if password confirmation is not assigned', async ({ client, assert }) => {
+  test('[update] Should fail if password confirmation is not assigned', async ({
+    client,
+    assert
+  }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
 
     const password = faker.internet.password()
@@ -267,7 +270,10 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
 
-  test('Should fail if username has already been registered', async ({ client, assert }) => {
+  test('[update] Should fail if username has already been registered', async ({
+    client,
+    assert
+  }) => {
     const user = await UserFactory.create()
 
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
@@ -291,7 +297,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'unique', field: 'username' }])
   })
 
-  test('Should fail if password confirmation does not match password', async ({
+  test('[update] Should fail if password confirmation does not match password', async ({
     client,
     assert
   }) => {
@@ -314,7 +320,7 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
 
-  test('Should fail if token is invalid [update]', async ({ client }) => {
+  test('[update] Should fail if token is invalid', async ({ client }) => {
     const password = faker.internet.password()
 
     const response = await client.put(`${URL}/invalid-token`).form({
@@ -326,7 +332,7 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
   })
 
-  test('Should fail if token does not exist in database [update]', async ({ client }) => {
+  test('[update] Should fail if token does not exist in database', async ({ client }) => {
     const password = faker.internet.password()
     const token = faker.datatype.uuid()
 
@@ -339,7 +345,7 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
   })
 
-  test('Should be possible for the user to complete his registration and activate his account', async ({
+  test('[update] Should be possible for the user to complete his registration and activate his account', async ({
     client,
     assert
   }) => {

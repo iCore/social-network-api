@@ -44,12 +44,13 @@ export default class PasswordRecoveriesController {
 
     await userKey.user.load('profile')
 
-    response.ok(
-      userKey.user.serialize({
+    response.ok({
+      expiredAt: userKey.expiredAt,
+      ...userKey.user.serialize({
         fields: { pick: ['email'] },
         relations: { profile: { fields: { pick: ['full_name'] } } }
       })
-    )
+    })
   }
 
   public async update({ request, response }: HttpContextContract) {

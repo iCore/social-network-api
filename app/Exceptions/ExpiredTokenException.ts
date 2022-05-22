@@ -15,7 +15,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 */
 export default class ExpiredTokenException extends Exception {
   constructor() {
-    super('The token provided is no longer valid', 500, 'E_EXPIRED_TOKEN')
+    super('The token provided is no longer valid', 400, 'E_EXPIRED_TOKEN')
   }
 
   public async handle(error: this, ctx: HttpContextContract) {
