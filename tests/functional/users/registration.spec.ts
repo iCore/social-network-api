@@ -320,6 +320,30 @@ test.group('Users registration', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
 
+  test('[update] Should fail if the password is less than eight characters long', async ({
+    client,
+    assert
+  }) => {
+    const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
+    const password = faker.internet.password(7)
+
+    const response = await client.put(`${URL}/${userKey.token}`).form({
+      username: faker.internet.userName(),
+      password,
+      passwordConfirmation: password
+    })
+
+    const body = response.body()
+
+    response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'minLength', field: 'password' }])
+  })
+
   test('[update] Should fail if token is invalid', async ({ client }) => {
     const password = faker.internet.password()
 

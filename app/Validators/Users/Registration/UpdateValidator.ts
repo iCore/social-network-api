@@ -25,7 +25,11 @@ export default class UpdateValidator {
    */
   public schema = schema.create({
     username: schema.string([rules.trim(), rules.unique({ column: 'username', table: 'users' })]),
-    password: schema.string([rules.trim(), rules.confirmed('passwordConfirmation')])
+    password: schema.string([
+      rules.trim(),
+      rules.minLength(8),
+      rules.confirmed('passwordConfirmation')
+    ])
   })
 
   /**

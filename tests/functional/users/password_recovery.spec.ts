@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import Mail from '@ioc:Adonis/Addons/Mail'
 import Database from '@ioc:Adonis/Lucid/Database'
-import { test, TestContext } from '@japa/runner'
+import { test } from '@japa/runner'
 import { User } from 'App/Models'
 import { UserKeysType } from 'App/Utils'
 import { UserFactory, UserKeyFactory } from 'Database/factories'
@@ -148,21 +148,21 @@ test.group('Users password recovery', (group) => {
 
   // PasswordRecoveriesController.show
 
-  async function tokenIsInvalid({ client }: TestContext) {
+  test('[show] Should fail if token is invalid', async ({ client }) => {
     const response = await client.get(`${URL}/invalid-token`)
 
     response.assertStatus(422)
-  }
+  })
 
-  async function tokenNotExist({ client }: TestContext) {
+  test('[show] Should fail if token does not exist in database', async ({ client }) => {
     const token = faker.datatype.uuid()
 
     const response = await client.get(`${URL}/${token}`)
 
     response.assertStatus(422)
-  }
+  })
 
-  async function tokenExpired({ client }: TestContext) {
+  test('[show] Should fail if the token is expired', async ({ client }) => {
     const userKey = await UserKeyFactory.merge({
       type: 'password_recovery',
       expiredAt: DateTime.now().minus({ day: 1 })
@@ -173,13 +173,7 @@ test.group('Users password recovery', (group) => {
     const response = await client.get(`${URL}/${userKey.token}`)
 
     response.assertStatus(400)
-  }
-
-  test('[show] Should fail if token is invalid', tokenIsInvalid)
-
-  test('[show] Should fail if token does not exist in database', tokenNotExist)
-
-  test('[show] Should fail if the token is expired', tokenExpired)
+  })
 
   test('[show] Should be possible to see the user who is in retrieving their password', async ({
     client,
@@ -203,11 +197,45 @@ test.group('Users password recovery', (group) => {
 
   // PasswordRecoveriesController.update
 
-  test('[update] Should fail if token is invalid', tokenIsInvalid)
+  test('[update] Should fail if token is invalid', async ({ client }) => {
+    const password = faker.internet.password()
 
-  test('[update] Should fail if token does not exist in database', tokenNotExist)
+    const response = await client.put(`${URL}/invalid-token`).form({
+      password,
+      passwordConfirmation: password
+    })
 
-  test('[update] Should fail if the token is expired', tokenExpired)
+    response.assertStatus(422)
+  })
+
+  test('[update] Should fail if token does not exist in database', async ({ client }) => {
+    const password = faker.internet.password()
+    const token = faker.datatype.uuid()
+
+    const response = await client.put(`${URL}/${token}`).form({
+      password,
+      passwordConfirmation: password
+    })
+
+    response.assertStatus(422)
+  })
+
+  test('[update] Should fail if the token is expired', async ({ client }) => {
+    const password = faker.internet.password()
+    const userKey = await UserKeyFactory.merge({
+      type: 'password_recovery',
+      expiredAt: DateTime.now().minus({ day: 1 })
+    })
+      .with('user', 1, (user) => user.with('profile'))
+      .create()
+
+    const response = await client.get(`${URL}/${userKey.token}`).form({
+      password,
+      passwordConfirmation: password
+    })
+
+    response.assertStatus(400)
+  })
 
   test('[update] Should fail if password is not assigned', async ({ client, assert }) => {
     const userKey = await UserKeyFactory.merge({ type: 'registration' }).with('user').create()
@@ -273,6 +301,29 @@ test.group('Users password recovery', (group) => {
     assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
+  })
+
+  test('[update] Should fail if the password is less than eight characters long', async ({
+    client,
+    assert
+  }) => {
+    const userKey = await UserKeyFactory.merge({ type: 'password_recovery' }).with('user').create()
+    const password = faker.internet.password(7)
+
+    const response = await client.put(`${URL}/${userKey.token}`).form({
+      password,
+      passwordConfirmation: password
+    })
+
+    const body = response.body()
+
+    response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'minLength', field: 'password' }])
   })
 
   test('[update] Should be possible for the user to complete updating their password', async ({
