@@ -88,6 +88,26 @@ test.group('Users password recovery', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'exists', field: 'email' }])
   })
 
+  test('[store] Should fail if the email is from an inactive account', async ({
+    client,
+    assert
+  }) => {
+    const user = await UserFactory.merge({ isActive: false }).create()
+    const redirectLink = faker.internet.url()
+
+    const response = await client.post(URL).form({ email: user.email, redirectLink })
+
+    const body = response.body()
+
+    response.assertStatus(422)
+
+    assert.isArray(body.errors)
+
+    assert.lengthOf(body.errors, 1)
+
+    assert.containsSubset(body.errors, [{ rule: 'exists', field: 'email' }])
+  })
+
   test('[store] Should fail if redirect link is not valid', async ({ client, assert }) => {
     const redirectLink = 'faker.internet.url()'
 
