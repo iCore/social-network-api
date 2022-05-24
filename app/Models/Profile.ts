@@ -4,7 +4,7 @@ import { UserInterest } from 'App/Utils/user'
 import { DateTime } from 'luxon'
 
 export default class Profile extends BaseModel {
-  @column({ isPrimary: true })
+  @column({ isPrimary: true, serializeAs: null })
   public id: number
 
   @column({ serializeAs: null })
