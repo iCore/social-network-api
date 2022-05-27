@@ -28,8 +28,6 @@ test.group('Users registration', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.lengthOf(body.errors, 1)
-
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'fullName' }])
   })
 
@@ -45,8 +43,6 @@ test.group('Users registration', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.lengthOf(body.errors, 1)
-
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'email' }])
   })
 
@@ -61,8 +57,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'redirectLink' }])
   })
@@ -80,8 +74,6 @@ test.group('Users registration', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.lengthOf(body.errors, 1)
-
     assert.containsSubset(body.errors, [{ rule: 'email', field: 'email' }])
   })
 
@@ -97,8 +89,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'url', field: 'redirectLink' }])
   })
@@ -117,8 +107,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'unique', field: 'email' }])
   })
@@ -220,8 +208,6 @@ test.group('Users registration', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.lengthOf(body.errors, 1)
-
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'username' }])
   })
 
@@ -240,8 +226,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'required', field: 'password' }])
   })
@@ -264,8 +248,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
@@ -292,8 +274,6 @@ test.group('Users registration', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.lengthOf(body.errors, 1)
-
     assert.containsSubset(body.errors, [{ rule: 'unique', field: 'username' }])
   })
 
@@ -314,8 +294,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'confirmed', field: 'passwordConfirmation' }])
   })
@@ -338,8 +316,6 @@ test.group('Users registration', (group) => {
     response.assertStatus(422)
 
     assert.isArray(body.errors)
-
-    assert.lengthOf(body.errors, 1)
 
     assert.containsSubset(body.errors, [{ rule: 'minLength', field: 'password' }])
   })

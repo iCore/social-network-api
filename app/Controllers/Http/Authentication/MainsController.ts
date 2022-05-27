@@ -10,10 +10,6 @@ export default class MainsController {
     response.ok(session)
   }
 
-  public async show({ auth, response }: HttpContextContract) {
-    response.ok(auth.user)
-  }
-
   public async destroy({ auth }: HttpContextContract) {
     await auth.logout()
   }
