@@ -5,9 +5,9 @@ import { User } from 'App/Models'
 import { UserInterest } from 'App/Utils/user'
 import { UserFactory } from 'Database/factories'
 
-const URL = '/authentication'
+const URL = '/profile'
 
-test.group('Authentication profile', (group) => {
+test.group('User authenticated profile', (group) => {
   let user: User
 
   group.each.setup(async () => {
@@ -54,15 +54,16 @@ test.group('Authentication profile', (group) => {
     client,
     assert
   }) => {
-    const response = await client
-      .put(URL)
-      .form({
+    const data = {
+      profile: {
         biography: faker.lorem.text(),
         birthday: 'faker.date.soon()',
         fullName: faker.name.findName(),
         interest: 'anything' as UserInterest
-      })
-      .loginAs(user)
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
 
     const body = response.body()
 
@@ -70,22 +71,22 @@ test.group('Authentication profile', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.containsSubset(body.errors, [{ rule: 'date.format', field: 'birthday' }])
+    assert.containsSubset(body.errors, [{ rule: 'date.format', field: 'profile.birthday' }])
   })
 
   test('[update] Should fail if user interest is not in predefined list', async ({
     client,
     assert
   }) => {
-    const response = await client
-      .put(URL)
-      .form({
+    const data = {
+      profile: {
         biography: faker.lorem.text(),
         birthday: faker.date.soon(),
         fullName: faker.name.findName(),
         interest: 'dog'
-      })
-      .loginAs(user)
+      }
+    }
+    const response = await client.put(URL).form(data).loginAs(user)
 
     const body = response.body()
 
@@ -93,19 +94,20 @@ test.group('Authentication profile', (group) => {
 
     assert.isArray(body.errors)
 
-    assert.containsSubset(body.errors, [{ rule: 'enum', field: 'interest' }])
+    assert.containsSubset(body.errors, [{ rule: 'enum', field: 'profile.interest' }])
   })
 
   test('[update] Should be possible for the user to update their profile', async ({ client }) => {
-    const response = await client
-      .put(URL)
-      .form({
+    const data = {
+      profile: {
         biography: faker.lorem.text(),
         birthday: faker.date.soon(),
         fullName: faker.name.findName(),
         interest: 'anything' as UserInterest
-      })
-      .loginAs(user)
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
 
     response.assertStatus(200)
   })

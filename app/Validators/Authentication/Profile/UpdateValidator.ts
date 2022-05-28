@@ -25,10 +25,12 @@ export default class UpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    biography: schema.string.optional([rules.trim()]),
-    fullName: schema.string.optional([rules.trim()]),
-    birthday: schema.date.optional(),
-    interest: schema.enum.optional(userInterests, [rules.trim()])
+    profile: schema.object.optional().members({
+      biography: schema.string.optional([rules.trim()]),
+      fullName: schema.string.optional([rules.trim()]),
+      birthday: schema.date.optional(),
+      interest: schema.enum.optional(userInterests, [rules.trim()])
+    })
   })
 
   /**

@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import UpdateValidator from 'App/Validators/Authentication/Profile/UpdateValidator'
 
-export default class ProfilesController {
+export default class MainController {
   public async show({ auth, response }: HttpContextContract) {
     const user = auth.user!
 
@@ -11,10 +11,10 @@ export default class ProfilesController {
   }
 
   public async update({ auth, request }: HttpContextContract) {
-    const { biography, birthday, fullName, interest } = await request.validate(UpdateValidator)
+    const { profile } = await request.validate(UpdateValidator)
 
-    await auth
-      .user!.related('profile')
-      .updateOrCreate({}, { biography, birthday, fullName, interest })
+    const user = auth.user!
+
+    await user.related('profile').updateOrCreate({}, { ...profile })
   }
 }
