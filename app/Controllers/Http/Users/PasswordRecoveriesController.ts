@@ -46,7 +46,7 @@ export default class PasswordRecoveriesController {
       expiredAt: key.expiredAt,
       ...key.user.serialize({
         fields: { pick: ['email'] },
-        relations: { profile: { fields: { pick: ['full_name'] } } }
+        relations: { profile: { fields: { pick: ['fullName'] } } }
       })
     })
   }

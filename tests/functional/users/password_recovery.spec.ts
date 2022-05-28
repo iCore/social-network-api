@@ -197,12 +197,12 @@ test.group('Users password recovery', (group) => {
       .create()
 
     const response = await client.get(`${URL}/${userKey.token}`)
-    const body = response.body()
+    const body: User = response.body()
 
     response.assertStatus(200)
 
     assert.properties(body, ['expiredAt', 'email', 'profile'])
-    assert.properties(body.profile, ['full_name'])
+    assert.properties(body.profile, ['fullName'])
   })
 
   // PasswordRecoveriesController.update

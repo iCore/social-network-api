@@ -97,8 +97,95 @@ test.group('User authenticated profile', (group) => {
     assert.containsSubset(body.errors, [{ rule: 'enum', field: 'profile.interest' }])
   })
 
-  test('[update] Should be possible for the user to update their profile', async ({ client }) => {
+  test('[update] Should fail if password confirmation is not assigned when a password is assigned', async ({
+    client
+  }) => {
+    const password = faker.internet.password(8)
     const data = {
+      password,
+      username: faker.internet.userName(),
+      profile: {
+        biography: faker.lorem.text(),
+        birthday: faker.date.soon(),
+        fullName: faker.name.findName(),
+        interest: 'anything' as UserInterest
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
+
+    response.assertStatus(422)
+  })
+
+  test('[update] Should fail if password confirmation does not match password', async ({
+    client
+  }) => {
+    const data = {
+      password: faker.internet.password(8),
+      passwordConfirmation: faker.internet.password(8),
+      username: faker.internet.userName(),
+      profile: {
+        biography: faker.lorem.text(),
+        birthday: faker.date.soon(),
+        fullName: faker.name.findName(),
+        interest: 'anything' as UserInterest
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
+
+    response.assertStatus(422)
+  })
+
+  test('[update] Should fail if the password is less than eight characters long', async ({
+    client
+  }) => {
+    const password = faker.internet.password(5)
+    const data = {
+      password,
+      passwordConfirmation: password,
+      username: faker.internet.userName(),
+      profile: {
+        biography: faker.lorem.text(),
+        birthday: faker.date.soon(),
+        fullName: faker.name.findName(),
+        interest: 'anything' as UserInterest
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
+
+    response.assertStatus(422)
+  })
+
+  test('[update] Should fail if username has already been registered', async ({ client }) => {
+    const password = faker.internet.password(8)
+    const data = {
+      password,
+      passwordConfirmation: password,
+      username: user.username,
+      profile: {
+        biography: faker.lorem.text(),
+        birthday: faker.date.soon(),
+        fullName: faker.name.findName(),
+        interest: 'anything' as UserInterest
+      }
+    }
+
+    const response = await client.put(URL).form(data).loginAs(user)
+
+    response.assertStatus(422)
+  })
+
+  test('[update] Should be possible for the user to update their profile', async ({
+    client,
+    assert
+  }) => {
+    const password = faker.internet.password(8)
+    const data = {
+      password,
+      passwordConfirmation: password,
+      username: faker.internet.userName(),
       profile: {
         biography: faker.lorem.text(),
         birthday: faker.date.soon(),
@@ -110,5 +197,10 @@ test.group('User authenticated profile', (group) => {
     const response = await client.put(URL).form(data).loginAs(user)
 
     response.assertStatus(200)
+
+    const account = await User.findByOrFail('id', user.id)
+    await account.load('profile')
+
+    assert.equal(data.username, account.username)
   })
 })

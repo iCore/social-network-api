@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import StoreValidator from 'App/Validators/Authentication/Main/StoreValidator'
+import StoreValidator from 'App/Validators/Authentication/StoreValidator'
 
 export default class AuthenticationsController {
   public async store({ auth, request, response }: HttpContextContract) {
