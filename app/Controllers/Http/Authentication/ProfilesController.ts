@@ -13,6 +13,8 @@ export default class ProfilesController {
   public async update({ auth, request }: HttpContextContract) {
     const { biography, birthday, fullName, interest } = await request.validate(UpdateValidator)
 
-    await auth.user!.profile.merge({ biography, birthday, fullName, interest }).save()
+    await auth
+      .user!.related('profile')
+      .updateOrCreate({}, { biography, birthday, fullName, interest })
   }
 }
