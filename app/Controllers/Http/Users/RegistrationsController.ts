@@ -6,7 +6,7 @@ import { StoreValidator, UpdateValidator } from 'App/Validators/Users/Registrati
 import TokenValidator from 'App/Validators/Users/TokenValidator'
 
 export default class RegistrationsController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request }: HttpContextContract) {
     const { fullName, email, redirectLink } = await request.validate(StoreValidator)
     const uuid = faker.datatype.uuid()
     const mail = new AccountActivation(email)
@@ -18,40 +18,36 @@ export default class RegistrationsController {
     await user.related('keys').updateOrCreate({ type: 'registration' }, { token: uuid })
 
     await mail.content({ activationLink: `${redirectLink}/${uuid}`, fullName }).send()
-
-    return response.ok('')
   }
 
   public async show({ request, response }: HttpContextContract) {
     const token = await TokenValidator.validate(request, 'registration')
 
-    const userKey = await UserKey.findByOrFail('token', token)
+    const key = await UserKey.findByOrFail('token', token)
 
-    await userKey.load('user')
+    await key.load('user')
 
-    await userKey.user.load('profile')
+    await key.user.load('profile')
 
     response.ok(
-      userKey.user.serialize({
+      key.user.serialize({
         fields: { pick: ['email'] },
         relations: { profile: { fields: { pick: ['full_name'] } } }
       })
     )
   }
 
-  public async update({ request, response }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const { username, password } = await request.validate(UpdateValidator)
 
     const token = await TokenValidator.validate(request, 'registration')
 
-    const userKey = await UserKey.findByOrFail('token', token)
+    const key = await UserKey.findByOrFail('token', token)
 
-    await userKey.load('user')
+    await key.load('user')
 
-    await userKey.user.merge({ username, password, isActive: true }).save()
+    await key.user.merge({ username, password, isActive: true }).save()
 
-    await userKey.delete()
-
-    return response.ok('')
+    await key.delete()
   }
 }

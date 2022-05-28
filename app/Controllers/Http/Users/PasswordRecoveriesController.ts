@@ -8,7 +8,7 @@ import TokenValidator from 'App/Validators/Users/TokenValidator'
 import { DateTime } from 'luxon'
 
 export default class PasswordRecoveriesController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request }: HttpContextContract) {
     const { email, redirectLink } = await request.validate(StoreValidator)
 
     const user = await User.findByOrFail('email', email)
@@ -27,49 +27,45 @@ export default class PasswordRecoveriesController {
     await mail
       .content({ resetPasswordLink: `${redirectLink}/${uuid}`, fullName: user.profile.fullName })
       .send()
-
-    return response.ok('')
   }
 
   public async show({ request, response }: HttpContextContract) {
     const token = await TokenValidator.validate(request, 'password_recovery')
 
-    const userKey = await UserKey.findByOrFail('token', token)
+    const key = await UserKey.findByOrFail('token', token)
 
-    if (DateTime.now() > userKey.expiredAt) {
+    if (DateTime.now() > key.expiredAt) {
       throw new ExpiredTokenException()
     }
 
-    await userKey.load('user')
+    await key.load('user')
 
-    await userKey.user.load('profile')
+    await key.user.load('profile')
 
     response.ok({
-      expiredAt: userKey.expiredAt,
-      ...userKey.user.serialize({
+      expiredAt: key.expiredAt,
+      ...key.user.serialize({
         fields: { pick: ['email'] },
         relations: { profile: { fields: { pick: ['full_name'] } } }
       })
     })
   }
 
-  public async update({ request, response }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const { password } = await request.validate(UpdateValidator)
 
     const token = await TokenValidator.validate(request, 'password_recovery')
 
-    const userKey = await UserKey.findByOrFail('token', token)
+    const key = await UserKey.findByOrFail('token', token)
 
-    if (DateTime.now() > userKey.expiredAt) {
+    if (DateTime.now() > key.expiredAt) {
       throw new ExpiredTokenException()
     }
 
-    await userKey.load('user')
+    await key.load('user')
 
-    await userKey.user.merge({ password }).save()
+    await key.user.merge({ password }).save()
 
-    await userKey.delete()
-
-    return response.ok('')
+    await key.delete()
   }
 }
