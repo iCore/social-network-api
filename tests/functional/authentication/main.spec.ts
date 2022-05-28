@@ -1,11 +1,8 @@
 import { faker } from '@faker-js/faker'
-import Mail from '@ioc:Adonis/Addons/Mail'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { User } from 'App/Models'
-import { UserKeysType } from 'App/Utils'
-import { UserFactory, UserKeyFactory } from 'Database/factories'
-import { DateTime } from 'luxon'
+import { UserFactory } from 'Database/factories'
 
 const URL = '/authentication'
 

@@ -19,7 +19,7 @@ test.group('Users profile', (group) => {
 
   // ProfilesController.show
 
-  test('[show] Deve falhar caso o usuário não esteja conectado', async ({ client, assert }) => {
+  test('[show] Should fail if user is not logged in', async ({ client, assert }) => {
     const response = await client.get(`${URL}/${user.username}`)
 
     const body = response.body()
@@ -29,22 +29,20 @@ test.group('Users profile', (group) => {
     assert.isArray(body.errors)
   })
 
-  test('[show] Deve falhar caso o nome de usuário não exista no banco de dados', async ({
-    client
-  }) => {
+  test('[show] Should fail if username does not exist in database', async ({ client }) => {
     const response = await client.get(`${URL}/${faker.internet.userName()}`).loginAs(auth)
 
     response.assertStatus(422)
   })
 
-  test('[show] Deve falhar caso o usuário do perfil esteja desativado', async ({ client }) => {
+  test('[show] Should fail if profile user is disabled', async ({ client }) => {
     const user = await UserFactory.merge({ isActive: false }).with('profile').create()
     const response = await client.get(`${URL}/${user.username}`).loginAs(auth)
 
     response.assertStatus(422)
   })
 
-  test('[show] Deve ser possível visualizar o perfil do usuário', async ({ client, assert }) => {
+  test('[show] Should be possible to view the users profile', async ({ client, assert }) => {
     const response = await client.get(`${URL}/${user.username}`).loginAs(auth)
 
     const body: User = response.body()
