@@ -7,3 +7,5 @@ Route.put('registration/:token', 'Users/RegistrationsController.update')
 Route.post('password-recovery', 'Users/PasswordREcoveriesController.store')
 Route.get('password-recovery/:token', 'Users/PasswordREcoveriesController.show')
 Route.put('password-recovery/:token', 'Users/PasswordREcoveriesController.update')
+
+Route.get('profile/:username', 'Users/ProfilesController.show').middleware('auth')
