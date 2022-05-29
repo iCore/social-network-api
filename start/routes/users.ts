@@ -12,3 +12,6 @@ Route.get('profile', 'Users/Authenticated/MainController.show').middleware('auth
 Route.put('profile', 'Users/Authenticated/MainController.update').middleware('auth')
 
 Route.get('user/:username', 'Users/MainController.show').middleware('auth')
+
+Route.put('avatar', 'Users/Authenticated/AvatarsController.update').middleware('auth')
+Route.delete('avatar', 'Users/Authenticated/AvatarsController.destroy').middleware('auth')
