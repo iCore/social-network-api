@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import Application from '@ioc:Adonis/Core/Application'
+import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { User } from 'App/Models'
@@ -202,5 +204,43 @@ test.group('User authenticated profile', (group) => {
     await account.load('profile')
 
     assert.equal(data.username, account.username)
+  })
+
+  // ProfilesController.destroy
+
+  test('[destroy] Should fail if user is not logged in', async ({ client, assert }) => {
+    const response = await client.delete(URL)
+
+    const body = response.body()
+
+    response.assertStatus(401)
+
+    assert.isArray(body.errors)
+  })
+
+  test('[destroy] Should be possible for the user to delete their account', async ({
+    client,
+    assert
+  }) => {
+    const drive = Drive.fake()
+    const filePath = `avatar/${user.username}`
+
+    await Drive.put(
+      filePath,
+      Application.makePath('tests', 'images', 'photo-by-face-generator.jpg')
+    )
+
+    const url = await Drive.getUrl(filePath)
+
+    await user.profile.merge({ avatar: url })
+
+    const response = await client.delete(URL).loginAs(user)
+
+    response.assertStatus(200)
+
+    assert.isFalse(await drive.exists(user.profile.avatar))
+    assert.isNull(await User.findBy('id', user.id))
+
+    Drive.restore()
   })
 })

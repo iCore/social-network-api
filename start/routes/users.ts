@@ -10,6 +10,7 @@ Route.put('password-recovery/:token', 'Users/PasswordREcoveriesController.update
 
 Route.get('profile', 'Users/Authenticated/MainController.show').middleware('auth')
 Route.put('profile', 'Users/Authenticated/MainController.update').middleware('auth')
+Route.delete('profile', 'Users/Authenticated/MainController.destroy').middleware('auth')
 
 Route.get('user/:username', 'Users/MainController.show').middleware('auth')
 
