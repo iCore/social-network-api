@@ -16,6 +16,7 @@ export default class Profiles extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 
+      table.string('avatar').nullable()
       table.text('biography').nullable()
       table.string('full_name').notNullable()
 
