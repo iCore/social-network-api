@@ -1,6 +1,6 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import UpdateValidator from 'App/Validators/Users/Authenticated/Avatar/UpdateValidator'
+import UpdateValidator from 'App/Validators/Authenticated/Avatar/UpdateValidator'
 
 export default class AvatarsController {
   public async update({ auth, request, response }: HttpContextContract) {

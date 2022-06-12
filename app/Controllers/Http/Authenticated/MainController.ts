@@ -1,7 +1,7 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { User } from 'App/Models'
-import UpdateValidator from 'App/Validators/Users/Authenticated/Main/UpdateValidator'
+import UpdateValidator from 'App/Validators/Authenticated/Main/UpdateValidator'
 export default class MainController {
   public async show({ auth, response }: HttpContextContract) {
     const user = auth.user!

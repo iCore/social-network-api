@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema } from '@ioc:Adonis/Core/Validator'
+import { CustomMessages, rules, schema } from '@ioc:Adonis/Core/Validator'
+import { userInterests } from 'App/Utils'
 
 export default class UpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -24,7 +25,10 @@ export default class UpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    avatar: schema.file({ size: '1mb', extnames: ['jpg', 'jpeg', 'png', 'bmp'] })
+    biography: schema.string.optional([rules.trim()]),
+    fullName: schema.string.optional([rules.trim()]),
+    birthday: schema.date.optional(),
+    interest: schema.enum.optional(userInterests, [rules.trim()])
   })
 
   /**
@@ -38,5 +42,5 @@ export default class UpdateValidator {
    * }
    *
    */
-  public messages = {}
+  public messages: CustomMessages = {}
 }

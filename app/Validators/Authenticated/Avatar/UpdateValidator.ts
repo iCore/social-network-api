@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CustomMessages, rules, schema } from '@ioc:Adonis/Core/Validator'
+import { CustomMessages, schema } from '@ioc:Adonis/Core/Validator'
 
-export default class StoreValidator {
+export default class UpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,12 +24,7 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string([
-      rules.trim(),
-      rules.email(),
-      rules.exists({ table: 'users', column: 'email', where: { is_active: true } })
-    ]),
-    redirectLink: schema.string([rules.trim(), rules.url()])
+    avatar: schema.file({ size: '1mb', extnames: ['jpg', 'jpeg', 'png', 'bmp'] })
   })
 
   /**

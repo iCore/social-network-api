@@ -7,9 +7,9 @@ import { User } from 'App/Models'
 import { UserAbout, UserInterest } from 'App/Utils/user'
 import { UserFactory } from 'Database/factories'
 
-const URL = '/profile'
+const URL = '/user/main'
 
-test.group('User authenticated profile', (group) => {
+test.group('User authenticated main', (group) => {
   let user: User
 
   group.each.setup(async () => {
@@ -18,7 +18,7 @@ test.group('User authenticated profile', (group) => {
     return () => Database.rollbackGlobalTransaction('sqlite')
   })
 
-  // ProfilesController.show
+  // MainController.show
 
   test('[show] Should fail if user is not logged in', async ({ client, assert }) => {
     const response = await client.get(URL)
@@ -30,7 +30,7 @@ test.group('User authenticated profile', (group) => {
     assert.isArray(body.errors)
   })
 
-  test('[show] Should be possible to view the users profile', async ({ client, assert }) => {
+  test('[show] Should be possible to view the users', async ({ client, assert }) => {
     const response = await client.get(URL).loginAs(user)
 
     const body: User = response.body()
@@ -40,7 +40,7 @@ test.group('User authenticated profile', (group) => {
     assert.equal(user.email, body.email)
   })
 
-  // ProfilesController.update
+  // MainController.update
 
   test('[update] Should fail if user is not logged in', async ({ client, assert }) => {
     const response = await client.put(URL)
@@ -179,7 +179,7 @@ test.group('User authenticated profile', (group) => {
     response.assertStatus(422)
   })
 
-  test('[update] Should be possible for the user to update their profile', async ({
+  test('[update] Should be possible for the user to update their account', async ({
     client,
     assert
   }) => {
@@ -246,7 +246,7 @@ test.group('User authenticated profile', (group) => {
     assert.lengthOf(account.profile.about, 3)
   })
 
-  // ProfilesController.destroy
+  // MainController.destroy
 
   test('[destroy] Should fail if user is not logged in', async ({ client, assert }) => {
     const response = await client.delete(URL)

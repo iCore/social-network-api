@@ -5,7 +5,7 @@ import { test } from '@japa/runner'
 import { User } from 'App/Models'
 import { UserFactory } from 'Database/factories'
 
-const URL = '/avatar'
+const URL = '/user/avatar'
 
 test.group('Users authenticated avatar', (group) => {
   let user: User
