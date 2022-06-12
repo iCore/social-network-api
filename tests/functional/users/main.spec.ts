@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { User } from 'App/Models'
-import { UserFactory } from 'Database/factories/user'
+import { UserFactory } from 'Database/factories'
 
 const URL = '/user'
 

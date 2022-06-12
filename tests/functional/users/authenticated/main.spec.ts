@@ -4,7 +4,7 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { User } from 'App/Models'
-import { UserInterest } from 'App/Utils/user'
+import { UserAbout, UserInterest } from 'App/Utils/user'
 import { UserFactory } from 'Database/factories'
 
 const URL = '/profile'
@@ -14,7 +14,7 @@ test.group('User authenticated profile', (group) => {
 
   group.each.setup(async () => {
     await Database.beginGlobalTransaction('sqlite')
-    user = await UserFactory.with('profile').create()
+    user = await UserFactory.with('profile', 1, (p) => p.with('about')).create()
     return () => Database.rollbackGlobalTransaction('sqlite')
   })
 
@@ -183,6 +183,24 @@ test.group('User authenticated profile', (group) => {
     client,
     assert
   }) => {
+    interface DataUser {
+      password?: string
+      passwordConfirmation?: string
+      username?: string
+      profile?: {
+        biography?: string
+        birthday?: Date
+        fullName?: string
+        interest?: UserInterest
+      }
+      about: Array<{
+        type: UserAbout
+        description?: string
+        since?: Date
+        until?: Date
+      }>
+    }
+
     const password = faker.internet.password(8)
     const data = {
       password,
@@ -192,9 +210,29 @@ test.group('User authenticated profile', (group) => {
         biography: faker.lorem.text(),
         birthday: faker.date.soon(),
         fullName: faker.name.findName(),
-        interest: 'anything' as UserInterest
-      }
-    }
+        interest: 'anything'
+      },
+      about: [
+        {
+          type: 'lived_in',
+          description: faker.lorem.text(),
+          since: faker.date.soon(),
+          until: faker.date.soon()
+        },
+        {
+          type: 'studied_at',
+          description: faker.lorem.text(),
+          since: faker.date.soon(),
+          until: faker.date.soon()
+        },
+        {
+          type: 'worked_in',
+          description: faker.lorem.text(),
+          since: faker.date.soon(),
+          until: faker.date.soon()
+        }
+      ]
+    } as DataUser
 
     const response = await client.put(URL).form(data).loginAs(user)
 
@@ -202,8 +240,10 @@ test.group('User authenticated profile', (group) => {
 
     const account = await User.findByOrFail('id', user.id)
     await account.load('profile')
+    await account.profile.load('about')
 
     assert.equal(data.username, account.username)
+    assert.lengthOf(account.profile.about, 3)
   })
 
   // ProfilesController.destroy
