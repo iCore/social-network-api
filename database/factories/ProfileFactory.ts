@@ -1,11 +1,10 @@
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import { Profile } from 'App/Models'
 import { UserInterest } from 'App/Utils/user'
+import { AboutFactory, UserFactory } from 'Database/factories'
 import { DateTime } from 'luxon'
 
-import { UserFactory } from './user'
-
-export const UserProfileFactory = Factory.define(Profile, ({ faker }) => ({
+export default Factory.define(Profile, ({ faker }) => ({
   avatar: faker.internet.avatar(),
   fullName: faker.name.findName(undefined, undefined, 'male'),
   biography: faker.lorem.text(),
@@ -13,4 +12,5 @@ export const UserProfileFactory = Factory.define(Profile, ({ faker }) => ({
   interest: 'women' as UserInterest
 }))
   .relation('user', () => UserFactory)
+  .relation('about', () => AboutFactory)
   .build()

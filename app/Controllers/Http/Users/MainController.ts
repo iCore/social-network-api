@@ -17,6 +17,7 @@ export default class MainController {
     const user = await User.findByOrFail('username', username)
 
     await user.load('profile')
+    await user.profile.load('about')
 
     response.ok(user)
   }

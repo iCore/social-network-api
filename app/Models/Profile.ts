@@ -1,8 +1,7 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import { User } from 'App/Models'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { About, User } from 'App/Models'
 import { UserInterest } from 'App/Utils/user'
 import { DateTime } from 'luxon'
-
 export default class Profile extends BaseModel {
   @column({ isPrimary: true, serializeAs: null })
   public id: number
@@ -27,4 +26,7 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @hasMany(() => About)
+  public about: HasMany<typeof About>
 }
