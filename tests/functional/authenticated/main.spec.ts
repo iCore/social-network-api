@@ -4,7 +4,7 @@ import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { User } from 'App/Models'
-import { UserAbout, UserInterest } from 'App/Utils/user'
+import { UserAboutType, UserInterest } from 'App/Utils/user'
 import { UserFactory } from 'Database/factories'
 
 const URL = '/user/main'
@@ -194,7 +194,7 @@ test.group('User authenticated main', (group) => {
         interest?: UserInterest
       }
       about: Array<{
-        type: UserAbout
+        type: UserAboutType
         description?: string
         since?: Date
         until?: Date

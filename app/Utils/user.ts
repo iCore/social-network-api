@@ -12,7 +12,7 @@ export type UserInterest = typeof userInterests[number]
 
 export const usersAbout = ['studied_at', 'lived_in', 'worked_in'] as const
 
-export type UserAbout = typeof usersAbout[number]
+export type UserAboutType = typeof usersAbout[number]
 
 export const userRelationships = [
   'known',
