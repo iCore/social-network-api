@@ -2,11 +2,11 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { About } from 'App/Models'
 import UpdateValidator from 'App/Validators/Authenticated/About/UpdateValidator'
 
-export default class AboutsController {
+export default class AboutController {
   public async show({ auth, response }: HttpContextContract) {
     await auth.user!.load('profile')
 
-    const about = await About.findByOrFail('profileId', auth.user!.profile.id)
+    const about = await About.findMany([auth.user!.profile.id])
 
     response.ok(about)
   }
