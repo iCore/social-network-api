@@ -8,11 +8,11 @@ Route.post('password-recovery', 'Users/PasswordREcoveriesController.store')
 Route.get('password-recovery/:token', 'Users/PasswordREcoveriesController.show')
 Route.put('password-recovery/:token', 'Users/PasswordREcoveriesController.update')
 
-Route.get('profile', 'Users/Authenticated/MainController.show').middleware('auth')
-Route.put('profile', 'Users/Authenticated/MainController.update').middleware('auth')
-Route.delete('profile', 'Users/Authenticated/MainController.destroy').middleware('auth')
-
 Route.get('user/:username', 'Users/MainController.show').middleware('auth')
 
-Route.put('avatar', 'Users/Authenticated/AvatarsController.update').middleware('auth')
-Route.delete('avatar', 'Users/Authenticated/AvatarsController.destroy').middleware('auth')
+Route.get('profile', 'Authenticated/MainController.show').middleware('auth')
+Route.put('profile', 'Authenticated/MainController.update').middleware('auth')
+Route.delete('profile', 'Authenticated/MainController.destroy').middleware('auth')
+
+Route.put('avatar', 'Authenticated/AvatarsController.update').middleware('auth')
+Route.delete('avatar', 'Authenticated/AvatarsController.destroy').middleware('auth')
