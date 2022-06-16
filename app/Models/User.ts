@@ -8,7 +8,7 @@ import {
   HasOne,
   hasOne
 } from '@ioc:Adonis/Lucid/Orm'
-import { Profile, UserKey } from 'App/Models'
+import { Conversation, Profile, UserKey } from 'App/Models'
 import { UserRole } from 'App/Utils/user'
 import { DateTime } from 'luxon'
 
@@ -55,4 +55,7 @@ export default class User extends BaseModel {
 
   @hasOne(() => Profile)
   public profile: HasOne<typeof Profile>
+
+  @hasMany(() => Conversation)
+  public conversation: HasMany<typeof Conversation>
 }
