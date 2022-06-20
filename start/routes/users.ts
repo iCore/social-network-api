@@ -21,4 +21,9 @@ Route.put('user/about', 'Authenticated/AboutController.update').middleware('auth
 Route.put('user/avatar', 'Authenticated/AvatarsController.update').middleware('auth')
 Route.delete('user/avatar', 'Authenticated/AvatarsController.destroy').middleware('auth')
 
+Route.post('/user/message', 'Authenticated/MessagesController.store').middleware('auth')
+Route.put('/user/message', 'Authenticated/MessagesController.update').middleware('auth')
+Route.delete('/user/message', 'Authenticated/MessagesController.destroy').middleware('auth')
+Route.get('/user/message/:id', 'Authenticated/MessagesController.show').middleware('auth')
+
 Route.get('user/:username', 'Users/MainController.show').middleware('auth')
